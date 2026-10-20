@@ -23,14 +23,12 @@
 
     <!-- ЭКРАН 2: Двусторонняя турнирная сетка -->
     <section id="screen-bracket" class="screen">
-        <!-- Компактная верхняя панель в одну строчку -->
         <header class="top-bar">
             <div class="top-title">🏆 ПЛЕЙ-ОФФ ТУРНИРА</div>
             <div class="top-hint">Кликните по победителю дуэли</div>
             <button id="btn-reset" class="btn-sm">Сбросить турнир</button>
         </header>
 
-        <!-- Рабочее поле сетки -->
         <div class="bracket-wrapper">
             <svg id="bracket-lines" class="bracket-lines"></svg>
             <div id="bracket-bilateral" class="bracket-bilateral">
@@ -64,27 +62,55 @@
         </div>
     </section>
 
-    <!-- ЭКРАН 4: Пьедестал победителей -->
+    <!-- ЭКРАН 4: Пьедестал с котиками -->
     <section id="screen-podium" class="screen">
-        <div class="card">
+        <div class="card podium-card">
             <h1>🏆 Победители Турнира</h1>
+            <p class="subtitle">Нажмите на котика, чтобы узнать его секрет скорости!</p>
+            
             <div class="podium">
+                <!-- 2 Место -->
                 <div class="podium-place place-2">
                     <div class="medal">🥈 2 Место</div>
+                    <div class="cat-box">
+                        <img id="cat-place-2" class="cat-img" src="" alt="Кот 2 место">
+                    </div>
                     <div class="winner-name" id="place-2-name">-</div>
                 </div>
+
+                <!-- 1 Место -->
                 <div class="podium-place place-1">
                     <div class="medal">🥇 1 Место</div>
+                    <div class="cat-box">
+                        <img id="cat-place-1" class="cat-img" src="" alt="Кот 1 место">
+                    </div>
                     <div class="winner-name" id="place-1-name">-</div>
                 </div>
+
+                <!-- 3 Место -->
                 <div class="podium-place place-3">
                     <div class="medal">🥉 3 Место</div>
+                    <div class="cat-box">
+                        <img id="cat-place-3" class="cat-img" src="" alt="Кот 3 место">
+                    </div>
                     <div class="winner-name" id="place-3-name">-</div>
                 </div>
             </div>
+
             <button id="btn-restart" class="btn primary">Начать новый турнир</button>
         </div>
     </section>
+
+    <!-- МОДАЛЬНОЕ ОКНО С КОТИКОМ И ФРАЗОЧКОЙ -->
+    <div id="cat-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <div class="modal-quote" id="modal-quote">"Цитата загружается..."</div>
+            <div class="modal-img-box">
+                <img id="modal-img" src="" alt="Увеличенный котик">
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

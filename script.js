@@ -1,3 +1,37 @@
+// ==========================================
+// 1. НАСТРОЙКИ: КАРТИНКИ И ЦИТАТЫ
+// ==========================================
+const LOCAL_CATS = [
+    'cats/cat1.jpg',
+    'cats/cat2.jpg',
+    'cats/cat3.jpg',
+    'cats/cat4.jpg',
+    'cats/cat5.jpg',
+    'cats/cat6.jpg',
+    'cats/cat7.jpg'
+];
+
+const BACKUP_CATS = [
+    'https://cataas.com/cat?type=square&1',
+    'https://cataas.com/cat?type=square&2',
+    'https://cataas.com/cat?type=square&3',
+    'https://cataas.com/cat?type=square&4',
+    'https://cataas.com/cat?type=square&5'
+];
+
+// Забавные фразочки про скоропечатание
+const TYPING_QUOTES = [
+    "«Мои лапки жмут 600 знаков в минуту, а ты и дальше ищи букву Ы!» 🐾",
+    "«Клавиатура горит, пальцы дымятся — вот он, киберспортивный спринт!» 🔥",
+    "«Я не делаю опечатки, я просто придумываю новые диалекты!» 😼",
+    "«Ctrl + Z не спасет тебя от позора медленной печати!» ⚡",
+    "«Печатаю так быстро, что Backspace обиделся и ушел на пенсию!» 🚀",
+    "«Слепая печать — это когда печатаешь вслепую, а потом боишься открыть глаза!» 😹",
+    "«Главное не скорость печати, а чтобы пробел не отвалился по пути!» ⌨️",
+    "«Пока ты думал, я уже отправил войну и мир в чат!» 💨",
+    "«Капслок нажат — значит, мои аргументы звучат громче!» 📢"
+];
+
 let state = {
     participants: [],
     rounds: [],
@@ -20,6 +54,12 @@ const wingRight = document.getElementById('wing-right');
 const bracketCenter = document.getElementById('bracket-center');
 const svgLines = document.getElementById('bracket-lines');
 
+// Элементы модального окна
+const catModal = document.getElementById('cat-modal');
+const modalQuote = document.getElementById('modal-quote');
+const modalImg = document.getElementById('modal-img');
+const modalClose = document.getElementById('modal-close');
+
 function showScreen(name) {
     Object.values(screens).forEach(screen => screen.classList.remove('active'));
     screens[name].classList.add('active');
@@ -33,7 +73,45 @@ function shuffle(array) {
     return array;
 }
 
-// СТАРТ
+function get3RandomCats() {
+    let pool = [...LOCAL_CATS];
+    if (pool.length < 3) pool = [...BACKUP_CATS];
+    const shuffled = shuffle(pool);
+    return [shuffled[0], shuffled[1], shuffled[2]];
+}
+
+// ==========================================
+// 2. УПРАВЛЕНИЕ МОДАЛЬНЫМ ОКНОМ
+// ==========================================
+function openModalWithCat(imgSrc) {
+    // Выбираем случайную фразочку
+    const randomQuote = TYPING_QUOTES[Math.floor(Math.random() * TYPING_QUOTES.length)];
+    modalQuote.innerText = randomQuote;
+    modalImg.src = imgSrc;
+    catModal.classList.add('active');
+}
+
+function closeModal() {
+    catModal.classList.remove('active');
+}
+
+modalClose.addEventListener('click', closeModal);
+catModal.addEventListener('click', (e) => {
+    // Закрываем при клике вне карточки
+    if (e.target === catModal) closeModal();
+});
+
+// Навешиваем клик на все 3 картинки на подиуме
+['cat-place-1', 'cat-place-2', 'cat-place-3'].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener('click', () => {
+        if (el.src) openModalWithCat(el.src);
+    });
+});
+
+// ==========================================
+// 3. ЛОГИКА ТУРНИРА
+// ==========================================
 document.getElementById('btn-start').addEventListener('click', () => {
     let names = textarea.value.trim().split('\n').map(n => n.trim()).filter(n => n.length > 0);
 
@@ -49,7 +127,6 @@ document.getElementById('btn-start').addEventListener('click', () => {
     setTimeout(drawConnectors, 50);
 });
 
-// ИНИЦИАЛИЗАЦИЯ
 function initTournament(players) {
     state.rounds = [];
     state.semiFinalLosers = [];
@@ -74,7 +151,6 @@ function initTournament(players) {
         matchCount /= 2;
     }
 
-    // Равномерное рассеивание BYE между крыльями
     const byeMatches = new Set();
     const half = totalMatchesR1 / 2;
     
@@ -113,7 +189,6 @@ function initTournament(players) {
     renderBilateralBracket();
 }
 
-// ОТРИСОВКА
 function renderBilateralBracket() {
     wingLeft.innerHTML = '';
     wingRight.innerHTML = '';
@@ -132,7 +207,6 @@ function renderBilateralBracket() {
         wingRight.appendChild(rightRoundEl);
     }
 
-    // Центр: Гранд Финал
     const finalRound = state.rounds[totalRounds - 1];
     const finalRoundEl = document.createElement('div');
     finalRoundEl.className = 'round center-final-round';
@@ -263,7 +337,6 @@ function advanceWinner(currentRound, currentMatchIdx, winnerName) {
     }
 }
 
-// ЭКРАН 3: ДУЭЛЬ ЗА 3 МЕСТО
 function startBronzeMatch() {
     const p1 = state.semiFinalLosers[0] || 'Полуфиналист 1';
     const p2 = state.semiFinalLosers[1] || 'Полуфиналист 2';
@@ -291,6 +364,20 @@ function finishTournament(bronzeWinner) {
     document.getElementById('place-1-name').innerText = state.place1;
     document.getElementById('place-2-name').innerText = state.place2;
     document.getElementById('place-3-name').innerText = state.place3;
+
+    const [cat1, cat2, cat3] = get3RandomCats();
+
+    const img1 = document.getElementById('cat-place-1');
+    const img2 = document.getElementById('cat-place-2');
+    const img3 = document.getElementById('cat-place-3');
+
+    img1.src = cat1;
+    img2.src = cat2;
+    img3.src = cat3;
+
+    img1.onerror = () => { img1.src = BACKUP_CATS[0]; };
+    img2.onerror = () => { img2.src = BACKUP_CATS[1]; };
+    img3.onerror = () => { img3.src = BACKUP_CATS[2]; };
 
     showScreen('podium');
 }
@@ -354,12 +441,6 @@ function drawConnectors() {
         });
     }
 }
-
-const resizeObserver = new ResizeObserver(() => {
-    drawConnectors();
-});
-const wrapperEl = document.querySelector('.bracket-wrapper');
-if (wrapperEl) resizeObserver.observe(wrapperEl);
 
 window.addEventListener('resize', drawConnectors);
 
