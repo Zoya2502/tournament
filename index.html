@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Турнир по скорости печати</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ЭКРАН 1: Ввод участников -->
+    <section id="screen-input" class="screen active">
+        <div class="card">
+            <h1>⌨️ Турнир по Скоропечатанию</h1>
+            <p class="subtitle">Введите участников (каждое имя с новой строки):</p>
+            <textarea id="participants-input" placeholder="Игрок 1&#10;Игрок 2&#10;..."></textarea>
+            <div class="actions">
+                <button id="btn-start" class="btn primary">Сформировать сетку</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЭКРАН 2: Двусторонняя турнирная сетка -->
+    <section id="screen-bracket" class="screen">
+        <!-- Компактная верхняя панель в одну строчку -->
+        <header class="top-bar">
+            <div class="top-title">🏆 ПЛЕЙ-ОФФ ТУРНИРА</div>
+            <div class="top-hint">Кликните по победителю дуэли</div>
+            <button id="btn-reset" class="btn-sm">Сбросить турнир</button>
+        </header>
+
+        <!-- Рабочее поле сетки -->
+        <div class="bracket-wrapper">
+            <svg id="bracket-lines" class="bracket-lines"></svg>
+            <div id="bracket-bilateral" class="bracket-bilateral">
+                <div id="wing-left" class="bracket-wing wing-left"></div>
+                <div id="bracket-center" class="bracket-center"></div>
+                <div id="wing-right" class="bracket-wing wing-right"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЭКРАН 3: Отдельный экран битвы за 3-е место -->
+    <section id="screen-bronze" class="screen">
+        <div class="card bronze-card">
+            <div class="bronze-badge">🥉 БОЙ ЗА БРОНЗУ</div>
+            <h2>Матч за 3-е место</h2>
+            <p class="subtitle">Кто займет почетное третье место на пьедестале?</p>
+            
+            <div class="duel-container">
+                <div class="duel-player" id="bronze-p1">
+                    <span class="player-name" id="bronze-p1-name">-</span>
+                    <span class="select-label">Победитель</span>
+                </div>
+                
+                <div class="vs-badge">VS</div>
+
+                <div class="duel-player" id="bronze-p2">
+                    <span class="player-name" id="bronze-p2-name">-</span>
+                    <span class="select-label">Победитель</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЭКРАН 4: Пьедестал победителей -->
+    <section id="screen-podium" class="screen">
+        <div class="card">
+            <h1>🏆 Победители Турнира</h1>
+            <div class="podium">
+                <div class="podium-place place-2">
+                    <div class="medal">🥈 2 Место</div>
+                    <div class="winner-name" id="place-2-name">-</div>
+                </div>
+                <div class="podium-place place-1">
+                    <div class="medal">🥇 1 Место</div>
+                    <div class="winner-name" id="place-1-name">-</div>
+                </div>
+                <div class="podium-place place-3">
+                    <div class="medal">🥉 3 Место</div>
+                    <div class="winner-name" id="place-3-name">-</div>
+                </div>
+            </div>
+            <button id="btn-restart" class="btn primary">Начать новый турнир</button>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>

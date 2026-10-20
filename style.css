@@ -1,0 +1,414 @@
+:root {
+    --bg-color: #080c13;
+    --card-bg: #141b27;
+    --card-hover: #1f293b;
+    --accent: #00e699;
+    --accent-glow: rgba(0, 230, 153, 0.4);
+    --gold: #f39c12;
+    --gold-glow: rgba(243, 156, 18, 0.4);
+    --bronze: #e67e22;
+    --border-color: #243044;
+    --line-color: #2b3b54;
+    --text-primary: #ffffff;
+    --text-secondary: #8a9bb2;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.screen {
+    display: none;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.screen.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* СТАРТОВЫЙ ЭКРАН */
+#screen-input.active, #screen-podium.active, #screen-bronze.active {
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 28px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+}
+
+h1 {
+    font-size: 1.6rem;
+    color: var(--accent);
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+}
+
+textarea {
+    width: 100%;
+    height: 160px;
+    background: #0d121c;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    padding: 12px;
+    font-size: 1.05rem;
+    resize: none;
+    margin-bottom: 15px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.btn {
+    border: none;
+    padding: 10px 22px;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.btn.primary {
+    background: var(--accent);
+    color: #080c13;
+}
+
+.btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+/* ТОНКАЯ ВЕРХНЯЯ ПАНЕЛЬ */
+.top-bar {
+    height: 48px;
+    background: #0d131f;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    flex-shrink: 0;
+}
+
+.top-title {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+}
+
+.top-hint {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.btn-sm {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-sm:hover {
+    border-color: #ff4757;
+    color: #ff4757;
+}
+
+/* ОСНОВНАЯ ОБЕРТКА (ЦЕНТРИРОВАНИЕ И ПОЛЯ) */
+.bracket-wrapper {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 40px; /* Отступы от краев браузера */
+    overflow: auto;
+}
+
+.bracket-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.bracket-line {
+    fill: none;
+    stroke: var(--line-color);
+    stroke-width: 2px;
+}
+
+.bracket-line.active-line {
+    stroke: var(--accent);
+    filter: drop-shadow(0 0 5px var(--accent-glow));
+}
+
+/* ЦЕНТРАЛИЗОВАННЫЙ БЛОК СЕТКИ */
+.bracket-bilateral {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 35px; /* Зазор между раундами */
+    max-width: 1300px; /* Ограничитель ширины */
+    width: 100%;
+    height: 520px; /* Фиксированная комфортная высота для матчей */
+}
+
+.bracket-wing {
+    display: flex;
+    gap: 35px;
+    height: 100%;
+    align-items: center;
+}
+
+.wing-right {
+    flex-direction: row-reverse;
+}
+
+/* КОЛОНКА РАУНДА (НЕ РАСТЯГИВАЕТСЯ) */
+.round {
+    display: flex;
+    flex-direction: column;
+    width: 180px; /* Фиксированная аккуратная ширина */
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.round-title {
+    text-align: center;
+    font-weight: 800;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.matches-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    flex-grow: 1;
+}
+
+/* КАРТОЧКА МАТЧА */
+.match {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-color);
+    border-radius: 7px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: 0.2s ease;
+    width: 100%;
+}
+
+.match.ready {
+    border-color: #3b4d66;
+}
+
+.match.ready:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(0, 230, 153, 0.25);
+}
+
+/* ИГРОКИ (КРУПНЫЙ ШРИФТ) */
+.player {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.player:first-child {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.player.empty {
+    color: #414d5e;
+    cursor: not-allowed;
+}
+
+.player:hover:not(.empty):not(.eliminated):not(.winner) {
+    background: var(--card-hover);
+    color: #fff;
+}
+
+.player.winner {
+    background: rgba(0, 230, 153, 0.15);
+    color: var(--accent);
+    font-weight: 800;
+}
+
+.player.winner::after {
+    content: "✓";
+    font-size: 0.9rem;
+    margin-left: 6px;
+}
+
+.player.eliminated {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* ЦЕНТР: ФИНАЛ */
+.bracket-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 210px; /* Чуть шире остальных */
+    height: 100%;
+    flex-shrink: 0;
+}
+
+.bracket-center .round-title {
+    color: var(--gold);
+    font-size: 0.85rem;
+}
+
+.bracket-center .matches-list {
+    justify-content: space-around;
+}
+
+.bracket-center .match {
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 18px var(--gold-glow);
+}
+
+.bracket-center .match .player {
+    font-size: 1.1rem;
+    padding: 12px 14px;
+}
+
+/* ЭКРАН 3: ДУЭЛЬ ЗА 3 МЕСТО */
+.bronze-card {
+    max-width: 540px;
+    border-color: var(--bronze);
+    box-shadow: 0 0 30px rgba(230, 126, 34, 0.25);
+}
+
+.bronze-badge {
+    color: var(--bronze);
+    font-weight: 800;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.duel-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 25px 0 10px;
+}
+
+.duel-player {
+    flex: 1;
+    background: #0d121c;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.duel-player:hover {
+    border-color: var(--bronze);
+    background: #182232;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(230, 126, 34, 0.4);
+}
+
+.duel-player .player-name {
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+
+.duel-player .select-label {
+    font-size: 0.75rem;
+    color: var(--bronze);
+    text-transform: uppercase;
+}
+
+.vs-badge {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+}
+
+/* ПОДИУМ */
+.podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 15px;
+    margin: 30px 0;
+}
+
+.podium-place {
+    background: #0d121c;
+    border: 1px solid var(--border-color);
+    border-radius: 10px 10px 4px 4px;
+    padding: 18px 10px;
+    flex: 1;
+}
+
+.medal { font-weight: bold; margin-bottom: 8px; font-size: 0.95rem; }
+.place-1 { height: 170px; border-color: #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+.place-1 .winner-name { color: #ffd700; font-size: 1.25rem; font-weight: bold; }
+.place-2 { height: 135px; border-color: #c0c0c0; }
+.place-2 .winner-name { color: #c0c0c0; font-size: 1.15rem; font-weight: bold; }
+.place-3 { height: 110px; border-color: var(--bronze); box-shadow: 0 0 15px rgba(230, 126, 34, 0.25); }
+.place-3 .winner-name { color: var(--bronze); font-size: 1.05rem; font-weight: bold; }
